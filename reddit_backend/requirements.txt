@@ -7,3 +7,5 @@ pyjwt==1.7.1
 pytz==2021.3; python_version >= "3.6"
 sqlparse==0.4.2; python_version >= "3.6"
 typing-extensions==3.10.0.2; python_version < "3.8" and python_version >= "3.6"
+drf-yasg==1.20.0
+swagger-spec-validator==2.7.4
