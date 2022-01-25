@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "users",
+    "reddit",
     "drf_yasg"
 ]
 
@@ -182,7 +182,7 @@ CORS_ORIGIN_REGEX_WHITELIST = [
     "http://localhost:4200",
 ]
 
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "reddit.User"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -214,4 +214,14 @@ JWT_AUTH = {
     "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=30),
     "JWT_AUTH_HEADER_PREFIX": "Bearer",
     "JWT_AUTH_COOKIE": None,
+}
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
 }

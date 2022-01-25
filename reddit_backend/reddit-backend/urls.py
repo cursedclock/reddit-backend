@@ -5,6 +5,8 @@ from rest_framework_jwt.views import refresh_jwt_token
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from reddit.urls import url_patterns
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -25,6 +27,6 @@ urlpatterns = [
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
     path("admin/", admin.site.urls),
-    path("auth/", include("users.urls")),
+    path("api/v0/", include(url_patterns)),
     path("auth/token-refresh/", refresh_jwt_token),
 ]
