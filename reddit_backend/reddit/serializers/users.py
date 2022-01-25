@@ -1,7 +1,9 @@
+import django.contrib.auth.password_validation
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
+from django.contrib.auth.password_validation import validate_password
 
 from reddit.models import User, UserProfile
 
@@ -18,6 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
     profile = UserSerializer(required=False)
+
+    def validate_password(self, password):
+        validate_password(password)
 
     class Meta:
         model = User

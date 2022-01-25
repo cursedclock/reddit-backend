@@ -17,6 +17,8 @@ from datetime import timedelta
 from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import reddit.utils.password
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -107,12 +109,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",  # noqa
+        "min_length": 8
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",  # noqa
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",  # noqa
+    },
+    {
+        "NAME": "reddit.utils.password.IncludeValidator",
     },
 ]
 
