@@ -1,13 +1,15 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import UserRegistrationView, UserLoginView, UserProfileView
+from .views.users import UserRegistrationView, UserLoginView, UserProfileView
 from .views.subreddit import SubredditViewSet
+from .views.post import PostViewSet
 
 
 router = routers.SimpleRouter()
 
 router.register('subreddit', SubredditViewSet)
+router.register('post', PostViewSet)
 
 url_patterns = [
     path('', include(router.urls)),
