@@ -17,7 +17,6 @@ class IncludeValidator:
                 self.get_help_text(),
                 code='password too simple'
             )
-        return password
 
     def get_help_text(self):
         msg = "This password is too simple, it must include at least:"
