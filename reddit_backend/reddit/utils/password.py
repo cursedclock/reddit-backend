@@ -1,11 +1,8 @@
 from django.core.exceptions import ValidationError
-from django.utils.translation import ngettext
 
 
 class IncludeValidator:
-    """
-    Validate whether the password is of a minimum length.
-    """
+
     def __init__(self, upper=True, lower=True, digit=True):
         self.upper = upper
         self.lower = lower
@@ -20,6 +17,7 @@ class IncludeValidator:
                 self.get_help_text(),
                 code='password too simple'
             )
+        return password
 
     def get_help_text(self):
         msg = "This password is too simple, it must include at least:"
