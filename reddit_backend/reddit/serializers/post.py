@@ -4,8 +4,8 @@ from reddit.models import Post, PostVote
 
 class PostSerializer(serializers.ModelSerializer):
 
-    downvotes = serializers.IntegerField()
-    upvotes = serializers.IntegerField()
+    downvotes = serializers.IntegerField(read_only=True)
+    upvotes = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
         return super(PostSerializer, self).create({**validated_data, 'author': self.context['request'].user})
@@ -13,7 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
-        read_only_fields = ['author', 'publish_date', 'upvotes', 'downvotes']
+        read_only_fields = ['author', 'publish_date', 'comment_count']
 
 
 class PostVoteSerializer(serializers.Serializer):
