@@ -1,17 +1,23 @@
 from rest_framework import status
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import mixins, GenericViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 
 from reddit.serializers.comment import PostCommentSerializer, CommentReplySerializer, CommentVoteSerializer
 from reddit.models import PostComment
 
 
-class CommentViewSet(GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin):
+class CommentViewSet(GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin):
 
     permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = PostComment.objects.all()
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    search_fields = ['text', 'on_post']
+    ordering_fields = ['publish_date']
+    filterset_fields = ['on_post', 'commentor']
 
     def get_serializer_class(self):
         if self.action in ['create', 'list', 'retrieve']:
