@@ -11,7 +11,7 @@ from django.db.models import Count, Q
 
 from reddit.utils.permissions import SubredditPermissions
 from reddit.serializers.subreddit import SubredditSerializer
-from reddit.models import Subreddit
+from reddit.models import Subreddit, Membership
 
 
 class SubredditViewSet(ModelViewSet):
@@ -33,3 +33,32 @@ class SubredditViewSet(ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['post'])
+    def memberships(self, request):
+        memberships = Membership.objects.filter(user=request.user).values('subreddit__id')
+        queryset = self.filter_queryset(self.get_queryset().filter(id__in=memberships))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['POST'])
+    def join(self, request, pk):
+        subreddit = self.get_object()
+        user = request.user
+        Membership.objects.get_or_create(subreddit=subreddit, user=user)
+        return Response({'code': 'success'}, status=201)
+
+    @action(detail=True, methods=['POST'])
+    def leave(self, request, pk):
+        subreddit = self.get_object()
+        user = request.user
+        membership = Membership.objects.filter(subreddit=subreddit, user=user).first()
+        if membership:
+            membership.delete()
+        return Response({'code': 'success'}, status=204)

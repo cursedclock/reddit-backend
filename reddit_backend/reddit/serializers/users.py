@@ -14,7 +14,7 @@ JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("name")
+        fields = ("name",)
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
