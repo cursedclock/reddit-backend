@@ -8,11 +8,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from reddit.serializers.comment import PostCommentSerializer, CommentReplySerializer, CommentVoteSerializer
 from reddit.models import PostComment
+from reddit.utils.permissions import CommentPermissions
 
 
 class CommentViewSet(GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin):
 
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, CommentPermissions)
     queryset = PostComment.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     search_fields = ['text', 'on_post']
