@@ -11,6 +11,7 @@ class Post(models.Model):
     author = models.ForeignKey(to=User, related_name='posts', null=True, on_delete=models.SET_NULL)
     subreddit = models.ForeignKey(to=Subreddit, related_name='posts', on_delete=models.CASCADE)
     publish_date = models.DateTimeField(auto_now_add=True)
+    comment_count = models.IntegerField(default=0)
 
     @property
     def upvotes(self):

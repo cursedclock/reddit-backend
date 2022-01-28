@@ -7,6 +7,7 @@ from .post import Post
 class BaseComment(models.Model):
     commentor = models.ForeignKey(to=User, related_name='comments', on_delete=models.CASCADE)
     text = models.TextField(max_length=500)
+    publish_date = models.DateTimeField(auto_now_add=True)
 
     @property
     def upvotes(self):

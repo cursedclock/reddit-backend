@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from reddit.models import CommentReply, PostComment, CommentVote
+from rest_framework.generics import get_object_or_404
+from reddit.models import CommentReply, PostComment, CommentVote, Post
 
 
 class CommentReplySerializer(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class CommentReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentReply
         fields = '__all__'
-        read_only_fields = ['on_comment', 'commentor']
+        read_only_fields = ['on_comment', 'commentor', 'publish_date']
 
 
 class PostCommentSerializer(serializers.ModelSerializer):
@@ -24,12 +25,15 @@ class PostCommentSerializer(serializers.ModelSerializer):
     comments = CommentReplySerializer(read_only=True, many=True)
 
     def create(self, validated_data):
+        post = get_object_or_404(Post, id=validated_data['on_post'])
+        post.comment_count += 1
+        post.save()
         return super(PostCommentSerializer, self).create({**validated_data, 'commentor': self.context['request'].user})
 
     class Meta:
         model = PostComment
         fields = '__all__'
-        read_only_fields = ['commentor']
+        read_only_fields = ['commentor', 'publish_date']
 
 
 class CommentVoteSerializer(serializers.Serializer):
