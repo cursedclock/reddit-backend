@@ -9,13 +9,14 @@ from reddit.utils.permissions import PostPermissions
 from reddit.serializers.post import PostSerializer, PostVoteSerializer
 from reddit.serializers.comment import PostCommentSerializer
 from reddit.models import Post, PostComment
+from reddit.utils.filters import SortPostsByUpvotesFilterBackend
 
 
 class PostViewSet(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin):
 
     permission_classes = (IsAuthenticatedOrReadOnly, PostPermissions)
     queryset = Post.objects.all()
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter, SortPostsByUpvotesFilterBackend]
     search_fields = ['title', 'body']
     ordering_fields = ['publish_date', 'comment_count']
     filterset_fields = ['author', 'subreddit', 'title']
