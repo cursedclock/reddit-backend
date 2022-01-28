@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from reddit.serializers.users import UserRegistrationSerializer, UserLoginSerializer, UserDetailSerializer
-from reddit.models import UserProfile
+from reddit.models import UserProfile, User
 
 
 class UserRegistrationView(CreateAPIView):
@@ -47,22 +47,24 @@ class UserLoginView(RetrieveAPIView):
 
 
 class UserView(RetrieveAPIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = UserDetailSerializer
+    queryset = User.objects.all()
 
-    def get(self, request, email):
+    def get(self, request):
         serializer = UserDetailSerializer(request.user)
         return Response(serializer.data)
 
 
 class UserProfileView(RetrieveAPIView):
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     authentication_class = JSONWebTokenAuthentication
+    queryset = UserProfile.objects.all()
 
     def get(self, request):
         try:
-            user_profile = UserProfile.objects.get(user=request.user)
+            user_profile = UserProfile.objects.get(user=request.query_params.get('user'))
             status_code = status.HTTP_200_OK
             response = {
                 "success": True,
