@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from reddit.serializers import UserRegistrationSerializer, UserLoginSerializer, UserDetailSerializer
+from reddit.serializers.users import UserRegistrationSerializer, UserLoginSerializer, UserDetailSerializer
 from reddit.models import UserProfile
 
 
