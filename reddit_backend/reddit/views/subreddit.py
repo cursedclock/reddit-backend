@@ -11,7 +11,7 @@ from django.db.models import Count, Q
 
 from reddit.utils.permissions import SubredditPermissions
 from reddit.serializers.subreddit import SubredditSerializer
-from reddit.models import Subreddit, Post
+from reddit.models import Subreddit
 
 
 class SubredditViewSet(ModelViewSet):
@@ -25,7 +25,7 @@ class SubredditViewSet(ModelViewSet):
     @action(detail=False, methods=['GET'])
     def trending(self, request):
         recent_posts = Count('posts', filter=Q(posts__publish_date__gte=timezone.now()-timedelta(days=1)))
-        queryset = self.get_queryset().annotate(recent_posts=recent_posts).order_by('-recent_posts')
+        queryset = self.filter_queryset(self.get_queryset()).annotate(recent_posts=recent_posts).order_by('-recent_posts')
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

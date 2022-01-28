@@ -8,13 +8,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from reddit.serializers.comment import PostCommentSerializer, CommentReplySerializer, CommentVoteSerializer
 from reddit.models import PostComment
+from reddit.utils.filters import SortCommentByUpvotesFilterBackend
 
 
 class CommentViewSet(GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin):
 
     permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = PostComment.objects.all()
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter, SortCommentByUpvotesFilterBackend]
     search_fields = ['text', 'on_post']
     ordering_fields = ['publish_date']
     filterset_fields = ['on_post', 'commentor']
