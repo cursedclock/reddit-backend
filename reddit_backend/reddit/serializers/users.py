@@ -14,7 +14,7 @@ JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("name",)
+        fields = ("name")
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "password", "profile")
+        fields = ("email", "password", "profile", "id")
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -40,6 +40,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.Serializer):
 
+    id = serializers.UUIDField(read_only=True)
     email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
@@ -64,6 +65,7 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    profile = UserSerializer()
     class Meta:
         model = User
-        fields = ("email", "profile")
+        fields = ("email", "profile", "id")
